@@ -1,0 +1,102 @@
+
+
+
+#include <LiquidCrystal.h>
+
+/* prevSpeedUpdate=time at previous revolution in milliseconds
+ curSpeedUpdate=time at current revolution (if any) in milliseconds
+ prevDisplayUpdate=time when display was last updated
+ curDisplayUpdate=time when display is updated
+ */
+
+unsigned long prevSpeedUpdate = -200.0, curSpeedUpdate = 0.0, prevDisplayUpdate = -2000.0, curDisplayUpdate = 0.0;
+
+/* reedSwitchpin=pin (Analog pin 0) connected to the reed switch
+ prevReedSwitch=previous state of analog pulse. Stores 1023 when reed switch is closed. Else 0.
+ curReedSwitch=current state of analog pulse. Identical storage values as prevReedSwitch.
+ */
+
+int reedSwitchPin = 0, prevReedSwitch = 0, curReedSwitch = 0;
+
+/* tempPin=pin (Analog pin 1) connected to the temperature sensor
+ curDisplay= variable to control display
+ */
+
+int tempPin = 1, curDisplay = 0;
+
+/* radius=radius of cycle wheel in meters. Have assumed a radius of 30cm
+ circumference=circumference of the cycle wheel
+ spd=speed of the cycle in m/s
+ rpm= revolutions of the cycle in revolutions/minute
+ dist=distance covered in meters
+ tempReading=ambient temperature in degree celcius
+ 
+ */
+float radius = 0.3, circumference = 2 * PI * radius, rpm, spd, distance = 0.0, tempReading;
+
+LiquidCrystal lcd(7, 8, 9, 10, 11, 12);
+
+void setup()
+{
+  pinMode(reedSwitchPin, INPUT);
+  pinMode(tempPin, INPUT);
+  lcd.begin(16, 2);
+}
+
+void loop() 
+{
+  //Speed Update.
+  curReedSwitch = digitalRead(reedSwitchPin);
+  curSpeedUpdate = millis();
+  if((curReedSwitch != prevReedSwitch) && (curSpeedUpdate - prevSpeedUpdate) >= 200) // The second condition is to prevent debouncing. Have assumed minimum time interval between revolutions is 0.2s 
+  {
+    if(curReedSwitch == 1023) 
+    {
+      spd = circumference * 1000 / (curSpeedUpdate - prevSpeedUpdate);
+      rpm = 60000 / (curSpeedUpdate - prevSpeedUpdate);
+      distance += (circumference / 1000.0);
+      prevSpeedUpdate = curSpeedUpdate;
+    }
+    prevReedSwitch = curReedSwitch;
+  } 
+
+  else if(curSpeedUpdate - prevSpeedUpdate >= 4000) 
+  {
+    spd = rpm = 0.0;
+  }
+
+  //Temperature & LCD Update
+  curDisplayUpdate = millis();
+  if(curDisplayUpdate - prevDisplayUpdate >= 2000) 
+  {
+    switch(curDisplay) 
+    {
+    case 0 :
+      { lcd.setCursor(0, 0);
+        lcd.print("Speed ");
+        lcd.print(spd * 18.0 / 5.0);
+        lcd.print(" km/h  ");
+        lcd.setCursor(0, 1);
+        lcd.print("RPM ");
+        lcd.print(rpm);
+        lcd.print(" rev/min");
+        break;
+      }
+
+    case 1 :
+      { tempReading = ((analogRead(tempPin) * 5.0 / 1024.0) - 0.5) * 100;
+        lcd.setCursor(0, 0);
+        lcd.print("Distance ");
+        lcd.print(distance);
+        lcd.print(" m");
+        lcd.setCursor(0, 1);
+        lcd.print("Temp ");
+        lcd.print(tempReading);
+        lcd.print(" C    ");
+      }
+    } 
+
+    curDisplay = (curDisplay + 1) % 2;
+    prevDisplayUpdate = curDisplayUpdate;
+  }
+}
