@@ -1,5 +1,4 @@
 
-
 /*
 Project Cycloduino- An arduino based instrument to calculate parameters (speed, rpm, distance, temperature) for a cyclist
 Copyright (C) 2013 Christin David Bose, Rahul Malhotra, Ian Yap Chang Jie
@@ -70,7 +69,7 @@ void setup()
 void loop() 
 {
   //Speed Update.
-  curReedSwitch = digitalRead(reedSwitchPin);
+  curReedSwitch = analogRead(reedSwitchPin);
   curSpeedUpdate = millis();
   if((curReedSwitch != prevReedSwitch) && (curSpeedUpdate - prevSpeedUpdate) >= 200) // The second condition is to prevent debouncing. Have assumed minimum time interval between revolutions is 0.2s 
   {
