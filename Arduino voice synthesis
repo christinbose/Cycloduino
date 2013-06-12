@@ -1,0 +1,106 @@
+
+
+#include<iostream>
+
+#include<string>
+
+using namespace std;
+
+
+void main() {
+
+    char units[10][7] = {"zero ", "one ", "two ", "three ", "four ", "five ", "six ", "seven ", "eight ", "nine "};
+
+    char tens[10][9] = {"", "", "twenty ", "thirty ", "forty ", "fifty ", "sixty ", "seventy ", "eighty ", "ninety "};
+
+    char teens[10][11] = {"ten ", "eleven ", "twelve ", "thirteen ", "fourteen ", "fifteen ", "sixteen ", "seventeen ", "eighteen ", "nineteen "};
+
+    char x3places[3][10] = {"", "thousand ", "million "};
+
+    double speed = 1234567.89;
+
+    int intSpeed;
+
+    char stringSpeed[1000] = "point ";
+
+    char tempString[1000] = "";
+
+
+    cout<<"\nEnter a Number Lesser Than 10 Million :";
+
+    cin>>speed;
+
+
+    intSpeed = speed * 100;
+
+
+    strcat(stringSpeed, units[int((intSpeed % 100) / 10)]);
+
+    if(intSpeed % 10 != 0) {
+
+        strcat(stringSpeed, units[intSpeed % 10]);
+
+    }
+
+    intSpeed /= 100;
+
+
+    for(int i = 0; (intSpeed != 0 && i < 2) || (intSpeed < 10 && intSpeed > 0 && i == 2); i++) {
+
+        if(int((intSpeed % 1000) / 100) != 0) {
+
+            strcat(tempString, units[int((intSpeed % 1000) / 100)]);
+
+            strcat(tempString, "hundred ");
+
+            if(intSpeed % 100 != 0) {
+
+                strcat(tempString, "and ");
+
+            }
+
+        }
+
+        if(intSpeed % 100 >= 20) {
+
+            strcat(tempString, tens[int((intSpeed % 100) / 10)]);
+
+            strcat(tempString, units[intSpeed % 10]);
+
+        } else if(intSpeed % 100 >= 10) {
+
+            strcat(tempString, teens[intSpeed % 10]);
+
+        } else if(intSpeed % 100 != 0) {
+
+            strcat(tempString, units[intSpeed % 10]);
+
+        }
+
+        if(i != 0) {
+
+            strcat(tempString, x3places[i]);
+
+        }
+
+        strcat(tempString, stringSpeed);
+
+        strcpy(stringSpeed, tempString);
+
+        strcpy(tempString, "");
+
+        intSpeed /= 1000;
+
+    }
+
+    strcpy(tempString, "your speed is ");
+
+    strcat(tempString, stringSpeed);
+
+    strcpy(stringSpeed, tempString);
+
+    strcpy(tempString, "");
+
+    cout<<stringSpeed<<"\n";
+
+}
