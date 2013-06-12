@@ -1,5 +1,35 @@
 
 
+/*
+Below is a prototype of the code, in C++, that we planned to use to convert the numerical data into statements that the SpeakJet Shield  could use.
+Copyright (C) 2013 Christin David Bose, Rahul Malhotra, Ian Yap Chang Jie
+
+
+Kindly use the following to contact us in case of any queries :
+
+
+Christin David Bose-CHRISTIN003@e.ntu.edu.sg
+Rahul Malhotra-RAHUL003@e.ntu.edu.sg 
+Ian Yap Chang Jie-ianyap92@hotmail.com
+
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    
+    
+Please refer to the README file for the GNU General Public License. The same can also be found at <http://www.gnu.org/licenses/>
+ 
+*/
+
+
 #include<iostream>
 
 #include<string>
@@ -104,3 +134,5 @@ void main() {
     cout<<stringSpeed<<"\n";
 
 }
+
+// The statement generated could then be passed to the serial data pin of the shield, after which the shield would take care of translating this into the relevant codes and synthesizing the voice.
